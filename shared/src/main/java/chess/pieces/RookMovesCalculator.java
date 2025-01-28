@@ -19,7 +19,78 @@ public class RookMovesCalculator implements PieceMovesCalculator{
 
     @Override
     public Collection<ChessMove> getPieceMoves(ChessBoard board, ChessPosition myPosition) {
+        int newRow = myPosition.getRow();
+        int newCol = myPosition.getColumn();
+        while((newRow < 8)) {
+            ChessPosition newPosition = new ChessPosition(newRow += 1, newCol);
+            if(isStuck(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+            ChessMove newMove = new ChessMove(myPosition, newPosition, null);
+            validMoves.add(newMove);
+            if(validateCanCapture(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+        }
+        newRow = myPosition.getRow();
+        newCol = myPosition.getColumn();
+        while((newRow > 1)) {
+            ChessPosition newPosition = new ChessPosition(newRow -= 1, newCol);
+            if(isStuck(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+            ChessMove newMove = new ChessMove(myPosition, newPosition, null);
+            validMoves.add(newMove);
+            if(validateCanCapture(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+        }
+        newRow = myPosition.getRow();
+        newCol = myPosition.getColumn();
+        while((newCol < 8)) {
+            ChessPosition newPosition = new ChessPosition(newRow, newCol += 1);
+            if(isStuck(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+            ChessMove newMove = new ChessMove(myPosition, newPosition, null);
+            validMoves.add(newMove);
+            if(validateCanCapture(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+        }
+        newRow = myPosition.getRow();
+        newCol = myPosition.getColumn();
+        while((newCol > 1)) {
+            ChessPosition newPosition = new ChessPosition(newRow, newCol -= 1);
+            if(isStuck(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+            ChessMove newMove = new ChessMove(myPosition, newPosition, null);
+            validMoves.add(newMove);
+            if(validateCanCapture(newRow, newCol, board, this.pieceColor)) {
+                break;
+            }
+        }
+
         return validMoves;
+    }
+
+    public boolean isStuck(int newRow, int newCol, ChessBoard board, ChessGame.TeamColor pieceColor) {
+        if ((((newRow <= 8) && (newRow >= 1)) && ((newCol <= 8) && (newCol >= 1)))) {
+            if(board.getPiece(new ChessPosition(newRow, newCol)) != null){
+                return board.getPiece(new ChessPosition(newRow, newCol)).getTeamColor() == pieceColor;
+            }
+        }
+        return false;
+    }
+
+    public boolean validateCanCapture(int newRow, int newCol, ChessBoard board, ChessGame.TeamColor pieceColor) {
+        if ((((newRow <= 8) && (newRow >= 1)) && ((newCol <= 8) && (newCol >= 1)))) {
+            if (board.getPiece(new ChessPosition(newRow, newCol)) != null) {
+                return board.getPiece(new ChessPosition(newRow, newCol)).getTeamColor() != pieceColor;
+            }
+        }
+        return false;
     }
 
     @Override
